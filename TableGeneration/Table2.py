@@ -1,6 +1,7 @@
 import random
 import numpy as np
-from TableGeneration.GenerateCorpus import ProjectCode
+# from TableGeneration.GenerateCorpus import ProjectCode
+from TableGeneration.GenerateCorpus import *
 
 def load_courp(p, join_c=''):
     courp = []
@@ -209,25 +210,51 @@ class Table:
         '''
         cell_type_l = ['b', 'e', 'f', 'g']
 
-        prob_a = 0.2
-        prob_c = 0.2
-        prob_d = 0.2
-        prob_h = 0.1
-        prob_i = 0.1
-        prob_j = 0.1
-        prob_k = 0.1
-        cell_type_l2 = random.choices(
-            ['a', 'c', 'd', 'h', 'i', 'j', 'k'],
-            weights=[prob_a, prob_c, prob_d, prob_h, prob_i, prob_j, prob_k],
-            k=self.no_of_cols - 4)
-        cell_type_l.extend(cell_type_l2)
+        # prob_a = 0.2
+        # prob_c = 0.2
+        # prob_d = 0.2
+        # prob_h = 0.1
+        # prob_i = 0.1
+        # prob_j = 0.1
+        # prob_k = 0.1
+        # cell_type_l2 = random.choices(
+        #     ['a', 'c', 'd', 'h', 'i', 'j', 'k'],
+        #     weights=[prob_a, prob_c, prob_d, prob_h, prob_i, prob_j, prob_k],
+        #     k=self.no_of_cols - 4)
+        cell_type_l2 = self.choice_cell_type()
+
+        cell_type_l.extend(cell_type_l2)  # 添加其它单元格类型
+
+        cell_type_l = self.sort_cell_type(cell_type_l)  # 排序 单元格类型
 
         for i, type in enumerate(cell_type_l):
             self.cell_types[:, i] = type
 
         self.headers[:] = 's'
+        # print(self.no_of_rows, self.no_of_cols)
         # print(self.cell_types)
         # print(self.headers)
+
+    def sort_cell_type(self, cell_type_l):
+        # print(cell_type_l)
+        random.shuffle(cell_type_l)
+        # print(cell_type_l)
+        out_l = []
+        for cell_type in cell_type_l:
+            if cell_type == 'b':
+                out_l.insert(0, cell_type)
+            else:
+                out_l.append(cell_type)
+        # print(out_l)
+        return out_l
+
+    def choice_cell_type(self):
+        choice_l = ['a', 'c', 'd', 'h', 'i', 'j', 'k']
+        if 0 < self.no_of_cols - 4 <= 7:
+            out_l = random.sample(choice_l, self.no_of_cols - 4)
+        else:
+            out_l = []
+        return out_l
 
     def generate_random_text(self, type):
         '''cell_types matrix have two possible values:
@@ -273,17 +300,17 @@ class Table:
         if type == 'a':
             out = ProjectCode()()
         elif type == 'b':
-            out = ''
+            out = ProjectName()()
         elif type == 'c':
-            out = ''
+            out = ProjectCostClas()()
         elif type == 'd':
-            out = ''
+            out = ProjectUnit()()
         elif type == 'e':
-            out = ''
+            out = ProjectUnitPrice()()
         elif type == 'f':
-            out = ''
+            out = ProjectQuantity()()
         elif type == 'g':
-            out = ''
+            out = ProjectAmount()()
         elif type == 'h':
             out = ''
         elif type == 'i':
@@ -403,7 +430,7 @@ class Table:
             row_span_indices += list(range(index, index + length))
 
         # print("self.col_spans_matrix:\n", self.col_spans_matrix)
-        # print("row_span_indices:", row_span_indices)
+        # print("self.row_span_indices:", row_span_indices)
 
         # for not span cols, set it to row span value 2
         b = list(
@@ -414,7 +441,6 @@ class Table:
         self.row_spans_matrix[0, b] = 2
         self.row_spans_matrix[1, b] = -1
         # print("self.row_spans_matrix:\n", self.row_spans_matrix)
-
 
     def make_first_col_spans(self):
         '''To make some random row spans on first col of each row'''
@@ -457,6 +483,7 @@ class Table:
                          ) * missing[:, 0] + self.header_count['r']
         missing[:, 1] = (self.no_of_rows - 1 - self.header_count['c']
                          ) * missing[:, 1] + self.header_count['c']
+        # print(self.cell_types)
         # print("missing:\n", missing)
 
         for arr in missing:
@@ -520,15 +547,15 @@ class Table:
         html += self.create_style()
         html += '<body><table>'
         # html += '<table style="width: 100%; table-layout:fixed;">'
-        # print("self.cell_types:\n", self.cell_types)
-        # print("self.row_spans_matrix:\n", self.row_spans_matrix)
-        # print("self.col_spans_matrix:\n", self.col_spans_matrix)
-        # print("self.headers:\n", self.headers)
-        # print("self.missing_cells:\n", self.missing_cells)
-        # print("html:", html)
-        # print("structure:", structure)
-        # print("self.no_of_rows:", self.no_of_rows)
-        # print("self.no_of_cols:", self.no_of_cols)
+        print("self.cell_types:\n", self.cell_types)
+        print("self.row_spans_matrix:\n", self.row_spans_matrix)
+        print("self.col_spans_matrix:\n", self.col_spans_matrix)
+        print("self.headers:\n", self.headers)
+        print("self.missing_cells:\n", self.missing_cells)
+        print("html:", html)
+        print("structure:", structure)
+        print("self.no_of_rows:", self.no_of_rows)
+        print("self.no_of_cols:", self.no_of_cols)
 
         for r in range(self.no_of_rows):
             html += '<tr>'

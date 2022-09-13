@@ -25,6 +25,7 @@ medical_insurance_category
 
 import random
 import string
+import numpy as np
 
 class ProjectCode(object):
     lists_k = ['项目代码', '项目编码', '编号', '代码']
@@ -58,10 +59,167 @@ class ProjectCode(object):
 
         return ''.join(random_str)
 
+class ProjectName(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        all_lists = self.load_name_dicts()
+
+        random_str = random.choice(all_lists)
+
+        return random_str
+
+    def load_name_dicts(self):
+        all_lists = []
+        with open('./dicts/name_dictionary_v1.0.txt', 'r', encoding='utf-8') as f1:
+            with open('./dicts/name_dictionary_v1.1.txt', 'r', encoding='utf-8') as f2:
+                with open('./dicts/name_dictionary_v1.2.txt', 'r', encoding='utf-8') as f3:
+
+                    lines1 = f1.readlines()
+                    lines2 = f2.readlines()
+                    lines3 = f3.readlines()
+
+                    for line1 in lines1:
+                        line1 = line1.strip('\n')
+                        all_lists.append(line1)
+                    for line2 in lines2:
+                        line2 = line2.strip('\n')
+                        all_lists.append(line2)
+                    for line3 in lines3:
+                        line3 = line3.strip('\n')
+                        all_lists.append(line3)
+                    # print(all_lists)
+
+                f3.close()
+            f2.close()
+        f1.close()
+        # print(all_lists)
+        # print(len(all_lists))  # 44833
+
+        return all_lists
+
+class ProjectCostClas(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        all_lists = self.load_clas_dicts()
+        random_str = random.choice(all_lists)
+
+        return random_str
+
+    def load_clas_dicts(self):
+        all_lists = []
+        with open('./dicts/费用类别语料.txt', 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip('\n')
+                all_lists.append(line)
+        return all_lists
+
+class ProjectUnit(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        all_lists = self.load_unit_dicts()
+        random_str = random.choice(all_lists)
+
+        return random_str
+
+    def load_unit_dicts(self):
+        all_lists = []
+        with open('./dicts/单位.txt', 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip('\n')
+                all_lists.append(line)
+        return all_lists
+
+# 单价：0.89、1.11/12.11、500、
+class ProjectUnitPrice(object):
+    def __init__(self):
+        pass
+    def __call__(self, *args, **kwargs):
+        random_str = self.generate_price_rule()
+
+        return random_str
+
+    def generate_price_rule(self):
+        p = np.array([0.8, 0.2])
+        value = np.random.choice([8, 2], p=p.ravel())  # 指定概率取值
+
+        if value == 8:
+            random_str = self.price_rule1()
+        else:
+            random_str = self.price_rule2()
+
+        return random_str
+
+    def price_rule1(self):
+        num = random.uniform(0, 100)
+        num = round(num, 2)
+
+        return str(num)
+
+    def price_rule2(self):
+        num = random.uniform(101, 1000)
+        num = round(num, 2)
+
+        return str(num)
+
+# 数量：1.00 ~ 100.00
+class ProjectQuantity(object):
+    def __init__(self):
+        pass
+    def __call__(self, *args, **kwargs):
+        random_str = self.generate_quantity()
+
+        return random_str
+    def generate_quantity(self):
+        num = random.uniform(0, 100)
+        num = round(num, 2)
+
+        return str(num)
+
+class ProjectAmount(object):
+    def __init__(self):
+        pass
+    def __call__(self, *args, **kwargs):
+        random_str = self.generate_amount()
+
+        return random_str
+
+    def generate_amount(self):
+        num = random.uniform(0, 1000)
+        num = round(num, 2)
+
+        return str(num)
+
+# 规格：
+# ~ml    ml: 1 ~ 300
+# ~ml/支   ml: 1 ~ 10
+# ~ml/袋  ml: 100 ~ 1000
+# ~mg/瓶  mg: 100 ~ 500
+# ~mg/袋  mg: 1~100
+# ~mg/1ml   mg: 0 ~ 1
+# ~mg*~片/盒、  mg: 1 ~ 10  片：1 ~ 100
+# ~mg*~支/支  mg: 1 ~ 10  支：1
+# ~g*~片/盒、  g: 0 ~ 1  片：1 ~ 100
+# ~g*~粒/盒、  g: 0 ~ 1  粒：1 ~ 100
+# ~g/袋   g: 0 ~ 10
+# ~g/支   g: 1 ~ 10
+# ~g*~片/盒   g: 0 ~ 1 片： 1 ~ 20
+# ~g/kg  g: 100 ~ 1000
+
 
 if __name__ == '__main__':
 
-    random_str = ProjectCode()()
+    # random_str = ProjectCode()()
+    # ProjectName()()
+    all_lists = ProjectUnit()()
+    print(all_lists)
     # print(random_str)
 
 
