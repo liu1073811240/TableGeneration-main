@@ -77,56 +77,56 @@ class Table:
                 'name': 'border_top',
                 'style': {
                     'table': 'border-top:1px solid black;font-family:SimSun;',
-                    'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                    'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                    'td': 'border-top:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                    'th': 'border-top:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                 }
             },  # 绘制上横线
             3: {
                 'name': 'border_bottom',
                 'style': {
                     'table': 'border-bottom:1px solid black;font-family:SimSun;',
-                    'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                    'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                    'td': 'border-bottom:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                    'th': 'border-bottom:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                 }
             },  # 绘制下横线
             4: {
                 'name': 'head_border_bottom',
                 'style': {
                     'table': 'border-bottom:1px solid black;font-family:SimSun;',
-                    'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                    'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                    'td': 'border-bottom:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                    'th': 'border-bottom:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                 }
             },  # 绘制 head 下横线
             5: {
                 'name': 'no_border',
                 'style': {'table': 'border-bottom:1px solid black;font-family:SimSun;',
-                          'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                          'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                          'td': 'font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                          'th': 'font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                           }
             },  # 无边框
             6: {
                 'name': 'border_left',
                 'style': {
                     'table': 'border-left:1px solid black;font-family:SimSun',
-                    'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                    'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                    'td': 'border-left:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                    'th': 'border-left:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                 }
             },  # 绘制左竖线
             7: {
                 'name': 'border_right',
                 'style': {
                     'table': 'border-right:1px solid black;font-family:SimSun',
-                    'td': 'border:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
-                    'th': 'border:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
+                    'td': 'border-right:1px solid black;font-size:20px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;',
+                    'th': 'border-right:1px solid black;font-size:30px;padding-top:3px;padding-bottom:3px;padding-left:5px;padding-right:10px;'
                 }
             }  # 绘制右竖线
         }
 
         # 随机选择一种
         self.border_type = random.choice(list(self.pre_boder_style.keys()))
-        # print(self.border_type)  # 1
+        print(self.border_type)  # 1
 
-        # self.border_type = 1
+        self.border_type = 7
 
         self.spanflag = False
         '''cell_types matrix have two possible values:
@@ -510,7 +510,6 @@ class Table:
         style += "border-collapse:collapse;"
         if 'table' in boder_style:
             style += boder_style['table']
-
 
         style += "}td{"
 
