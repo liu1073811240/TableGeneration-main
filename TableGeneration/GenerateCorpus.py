@@ -27,8 +27,10 @@ import random
 import string
 import numpy as np
 
+
 class ProjectCode(object):
     lists_k = ['项目代码', '项目编码', '编号', '代码']
+
     def __init__(self):
         self.k = ['项目代码', '项目编码', '编号', '代码']
 
@@ -58,6 +60,7 @@ class ProjectCode(object):
         # print(random_str)
 
         return ''.join(random_str)
+
 
 class ProjectName(object):
     def __init__(self):
@@ -99,6 +102,7 @@ class ProjectName(object):
 
         return all_lists
 
+
 class ProjectCostClas(object):
     def __init__(self):
         pass
@@ -117,6 +121,7 @@ class ProjectCostClas(object):
                 line = line.strip('\n')
                 all_lists.append(line)
         return all_lists
+
 
 class ProjectUnit(object):
     def __init__(self):
@@ -137,10 +142,12 @@ class ProjectUnit(object):
                 all_lists.append(line)
         return all_lists
 
+
 # 单价：0.89、1.11/12.11、500、
 class ProjectUnitPrice(object):
     def __init__(self):
         pass
+
     def __call__(self, *args, **kwargs):
         random_str = self.generate_price_rule()
 
@@ -169,23 +176,28 @@ class ProjectUnitPrice(object):
 
         return str(num)
 
+
 # 数量：1.00 ~ 100.00
 class ProjectQuantity(object):
     def __init__(self):
         pass
+
     def __call__(self, *args, **kwargs):
         random_str = self.generate_quantity()
 
         return random_str
+
     def generate_quantity(self):
         num = random.uniform(0, 100)
         num = round(num, 2)
 
         return str(num)
 
+
 class ProjectAmount(object):
     def __init__(self):
         pass
+
     def __call__(self, *args, **kwargs):
         random_str = self.generate_amount()
 
@@ -197,6 +209,7 @@ class ProjectAmount(object):
 
         return str(num)
 
+
 # 规格：
 # ~ml    ml: 1 ~ 300
 # ~ml/支   ml: 1 ~ 10
@@ -205,22 +218,111 @@ class ProjectAmount(object):
 # ~mg/袋  mg: 1~100
 # ~mg/1ml   mg: 0 ~ 1
 # ~mg*~片/盒、  mg: 1 ~ 10  片：1 ~ 100
-# ~mg*~支/支  mg: 1 ~ 10  支：1
+# ~mg*~支/支  mg: 1 ~ 10  支：1 ~ 5
 # ~g*~片/盒、  g: 0 ~ 1  片：1 ~ 100
 # ~g*~粒/盒、  g: 0 ~ 1  粒：1 ~ 100
 # ~g/袋   g: 0 ~ 10
 # ~g/支   g: 1 ~ 10
-# ~g*~片/盒   g: 0 ~ 1 片： 1 ~ 20
 # ~g/kg  g: 100 ~ 1000
+class Specifications(object):
+    def __init__(self):
+        self.dicts_spe = {'~ml': [1, 300], '~ml/支': [1, 10], '~ml/袋': [100, 1000], '~mg/瓶': [100, 500],
+                          '~mg/袋': [1, 100], '~mg/1ml': [1, 2], '~mg*~片/盒': [[1, 10], [1, 100]],
+                          '~mg*~支/支': [[1, 10], [1, 5]], '~g*~片/盒': [[1, 5], [1, 100]], '~g*~粒/盒': [[1, 10], [1, 100]],
+                          '~g/袋': [1, 10], '~g/支': [1, 10], '~g/kg': [100, 1000], }
+
+    def __call__(self, *args, **kwargs):
+        out_l = self.generate_rule()
+        random_str = random.choice(out_l)
+
+        return random_str
+
+    def generate_rule(self):
+        out_l = []
+        for k, v in self.dicts_spe.items():
+            out_str = ''
+            v_num = [s1 for s1 in k if s1 == '~']  # 判断'~'字符个数
+
+            if len(v_num) == 1:  # 1个 ~
+                for s2 in k:
+                    if s2 == '~':
+                        num = random.randint(v[0], v[1])
+                        out_str += str(num)
+                    else:
+                        out_str += s2
+                # print(out_str)
+
+            elif len(v_num) == 2:  # '~mg*~片/盒': [[1, 10], [1, 100]],
+                count = 0
+                for s3 in k:
+                    if s3 == '~' and count == 0:
+                        num = random.randint(v[0][0], v[0][1])
+                        out_str += str(num)
+                        count += 1
+                    elif s3 == '~' and count == 1:
+                        num = random.randint(v[1][0], v[1][1])
+                        out_str += str(num)
+                        count += 1
+                    else:
+                        out_str += s3
+                # print(out_str)
+
+            else:
+                out_str += ''
+            out_l.append(out_str)
+
+        return out_l
+
+
+class ConceitRatio(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        out_l = self.generate_rule()
+        random_str = random.choice(out_l)
+
+        return random_str
+
+    def generate_rule(self):
+        out_l = ['30.00%', '50.00%', '100.00%']
+        return out_l
+
+
+class SelfFinancingAmount(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        random_str = self.generate_rule()
+
+        return random_str
+
+    def generate_rule(self):
+        num = random.uniform(1, 500)
+        num = round(num, 2)
+
+        return str(num)
+
+class MedicalInsuranceCategory():
+    def __init__(self):
+        pass
+    def __call__(self, *args, **kwargs):
+        category_l = self.generate_rule()
+        random_str = random.choice(category_l)
+
+        return random_str
+
+    def generate_rule(self):
+        category_l = ['甲类', '乙类', '丙类']
+
+        return category_l
 
 
 if __name__ == '__main__':
-
     # random_str = ProjectCode()()
     # ProjectName()()
-    all_lists = ProjectUnit()()
-    print(all_lists)
+    # all_lists = ProjectUnit()()
+    # print(all_lists)
     # print(random_str)
-
-
-
+    Specifications()()

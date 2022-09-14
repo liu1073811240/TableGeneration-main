@@ -7,7 +7,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--num', type=int, default=1, help='the number of generate table')
     # output path
-    parser.add_argument('--output', type=str, default='output/simple_table')  # data save path
+    parser.add_argument('--output', type=str, default='output/qd_table')  # data save path
     # courp path
     parser.add_argument('--ch_dict_path', type=str, default='dicts/ch_news.txt')
     parser.add_argument('--en_dict_path', type=str, default='dicts/en_corpus.txt')
@@ -18,9 +18,9 @@ def parse_args():
     parser.add_argument('--cell_box_type', type=str, default='text',
                         help='cell: use cell location as cell box; text: use location of text in cell as cell box')
     # row and col
-    parser.add_argument('--min_row', type=int, default=3, help='min rows in table')
-    parser.add_argument('--max_row', type=int, default=15, help='max rows in table')
-    parser.add_argument('--min_col', type=int, default=4, help='min cols in table')
+    parser.add_argument('--min_row', type=int, default=10, help='min rows in table')  # 3
+    parser.add_argument('--max_row', type=int, default=45, help='max rows in table')  # 15
+    parser.add_argument('--min_col', type=int, default=11, help='min cols in table')  # 4
     parser.add_argument('--max_col', type=int, default=11, help='max cols in table')  # 最大值不超过定义的类型个数,不然会重复
     # row and col span
     parser.add_argument('--max_span_row_count', type=int, default=3, help='max span rows')
