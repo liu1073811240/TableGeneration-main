@@ -20,7 +20,7 @@ def parse_args():
     # row and col
     parser.add_argument('--min_row', type=int, default=10, help='min rows in table')  # 3
     parser.add_argument('--max_row', type=int, default=45, help='max rows in table')  # 15
-    parser.add_argument('--min_col', type=int, default=11, help='min cols in table')  # 4
+    parser.add_argument('--min_col', type=int, default=4, help='min cols in table')  # 4
     parser.add_argument('--max_col', type=int, default=11, help='max cols in table')  # 最大值不超过定义的类型个数,不然会重复
     # row and col span
     parser.add_argument('--max_span_row_count', type=int, default=3, help='max span rows')

@@ -2,6 +2,7 @@ import random
 import numpy as np
 # from TableGeneration.GenerateCorpus import ProjectCode
 from TableGeneration.GenerateCorpus import *
+from dicts.ch_en import *
 
 def load_courp(p, join_c=''):
     courp = []
@@ -21,6 +22,23 @@ def load_medicine_dicts():
             out_medicine_list.append(line)
 
     return out_medicine_list
+
+def load_base_info():
+    name_l = []
+    quantity_l = []
+    unit_price_l = []
+    amount_of_money_l = []
+    for k, v in ch_en.items():
+        if v == 'name':
+            name_l.append(k)
+        elif v == 'quantity':
+            quantity_l.append(k)
+        elif v == 'unit_price':
+            unit_price_l.append(k)
+        elif v == 'amount_of_money':
+            amount_of_money_l.append(k)
+
+    return name_l, quantity_l, unit_price_l, amount_of_money_l
 
 
 class Table:
@@ -124,9 +142,9 @@ class Table:
 
         # 随机选择一种
         self.border_type = random.choice(list(self.pre_boder_style.keys()))
-        print(self.border_type)  # 1
+        # print(self.border_type)  # 1
 
-        self.border_type = 7
+        # self.border_type = 7
 
         self.spanflag = False
         '''cell_types matrix have two possible values:
@@ -295,70 +313,74 @@ class Table:
 
         return ''.join(out)
 
-    def generate_random_text2(self, type):
+    def generate_random_text2(self, type, r):  # 文本类型、行数
         '''
         a - code、b - name、c - cost_clas、d - unit、e - unit-price、f - quantity、g - amount、h - specifications、
         i - conceit_ratio、j - self_financing_amount、k - medical_insurance_category
         '''
         # print(type)
-        if type == 'a':
-            out = ProjectCode()()
-        elif type == 'b':
-            out = ProjectName()()
-        elif type == 'c':
-            out = ProjectCostClas()()
-        elif type == 'd':
-            out = ProjectUnit()()
-        elif type == 'e':
-            out = ProjectUnitPrice()()
-        elif type == 'f':
-            out = ProjectQuantity()()
-        elif type == 'g':
-            out = ProjectAmount()()
-        elif type == 'h':
-            out = Specifications()()
-        elif type == 'i':
-            out = ConceitRatio()()
-        elif type == 'j':
-            out = SelfFinancingAmount()()
-        elif type == 'k':
-            out = MedicalInsuranceCategory()()
-        elif type == 't':  # 置为空格
-            out = ''
+        if r == 0:  # 第一行直接作为头部
+            name_l, quantity_l, unit_price_l, amount_of_money_l = load_base_info()
+            if type == 'a':
+                out = random.choice(['项目代码', '项目编码'])
+            elif type == 'b':
+                out = random.choice(name_l)
+            elif type == 'c':
+                out = random.choice(['费用类别', '类别'])
+            elif type == 'd':
+                out = random.choice(['单位'])
+            elif type == 'e':
+                out = random.choice(unit_price_l)
+            elif type == 'f':
+                out = random.choice(quantity_l)
+            elif type == 'g':
+                out = random.choice(amount_of_money_l)
+            elif type == 'h':
+                out = random.choice(['规格', '规格/单位'])
+            elif type == 'i':
+                out = random.choice(['自负比例'])
+            elif type == 'j':
+                out = random.choice(['自负金额', '自理金额'])
+            elif type == 'k':
+                out = random.choice(['医保类别'])
+            elif type == 't':  # 置为空格
+                out = ''
+            else:
+                out = ''
+                print("出现其它单元格类型，已终止程序！！！")
+                exit()
         else:
-            out = ''
-            print("出现其它单元格类型，已终止程序！！！")
-            exit()
 
-        # if type in ['n', 'm']:
-        #     # max_num = random.choice([10, 100, 1000, 10000])
-        #     # if random.random() < 0.5:
-        #     #     out = '{:.2f}'.format(random.random() * max_num)
-        #     # elif random.random() < 0.7:
-        #     #     out = '{:.0f}'.format(random.random() * max_num)
-        #     # else:
-        #     #     # 随机保留小数点后2位
-        #     #     out = str(random.random() *
-        #     #               max_num)[:len(str(max_num)) + random.randint(0, 3)]
-        #     # if type == 'm':
-        #     #     out = '$' + out
-        #     random_str = ProjectCode()()
-        #     out = random_str
-        # elif (type == 'e'):
-        #     txt_len = random.randint(self.min_txt_len, self.max_txt_len)
-        #     out = self.generate_text(txt_len, self.en)
-        #
-        #     # 50% 的概率第一个字母大写
-        #     if random.random() < 0.5:
-        #         out[0] = out[0].upper()
-        # elif type == 't':
-        #     out = ''
-        # else:
-        #     txt_len = random.randint(self.min_txt_len, self.max_txt_len)
-        #     out = self.generate_text(txt_len, self.ch)
-            # out = random.choice(self.medicine_lists)
-        # print(type)  # e
-        # print(out)  # ['B', 'o', 'u', 't', 'S', 't', 'o', 'r']
+            if type == 'a':
+                out = ProjectCode()()
+            elif type == 'b':
+                out = ProjectName()()
+            elif type == 'c':
+                out = ProjectCostClas()()
+            elif type == 'd':
+                out = ProjectUnit()()
+            elif type == 'e':
+                out = ProjectUnitPrice()()
+            elif type == 'f':
+                out = ProjectQuantity()()
+            elif type == 'g':
+                out = ProjectAmount()()
+            elif type == 'h':
+                out = Specifications()()
+            elif type == 'i':
+                out = ConceitRatio()()
+            elif type == 'j':
+                out = SelfFinancingAmount()()
+            elif type == 'k':
+                out = MedicalInsuranceCategory()()
+            elif type == 't':  # 置为空格
+                out = ''
+            else:
+                out = ''
+                print("出现其它单元格类型，已终止程序！！！")
+                exit()
+
+
         return ''.join(out)
 
     def generate_text(self, txt_len, dict):
@@ -627,7 +649,7 @@ class Table:
                 # print("text_type:", text_type)
 
                 # txt = self.generate_random_text(text_type)
-                txt = self.generate_random_text2(text_type)
+                txt = self.generate_random_text2(text_type, r)
                 # print("txt:", txt)
                 if self.cell_box_type == 'text':
                     txt = '<span id=' + str(idcounter) + '>' + txt + ' </span>'
@@ -665,10 +687,12 @@ class Table:
         if self.border_type < 60:  # 绘制横线的情况下进行随机span
             # first row span
             if self.max_span_col_count > 0:
-                self.make_first_row_spans()
+                # self.make_first_row_spans()
+                pass
             # first col span
             if random.random() < 1 and self.max_span_row_count > 0:
-                self.make_first_col_spans()
+                # self.make_first_col_spans()
+                pass
         # print(self.cell_types)
         # print(self.headers)
         # print(self.row_spans_matrix)
