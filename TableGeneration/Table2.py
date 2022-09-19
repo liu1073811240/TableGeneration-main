@@ -168,6 +168,11 @@ class Table:
         '''A positive value at a position means number of rows to span and -1 will show to skip that cell as part of spanned rows'''
         self.row_spans_matrix = np.zeros(shape=(self.no_of_rows,
                                                 self.no_of_cols))
+
+        # 跨越两行的明细行
+        self.two_row_span_matrix = np.zeros(shape=(self.no_of_rows,
+                                                   self.no_of_cols))
+
         '''missing_cells will contain a list of (row,column) pairs where each pair would show a cell where no text should be written'''
         self.missing_cells = []
 
@@ -445,6 +450,8 @@ class Table:
                     len(header_span_lengths) != 0):
                 break
 
+        # print(header_span_indices)
+        # print(header_span_lengths)
         # print(self.col_spans_matrix)
 
         # make first row span matric
@@ -454,8 +461,8 @@ class Table:
             self.col_spans_matrix[0, index] = length
             self.col_spans_matrix[0, index + 1:index + length] = -1
             row_span_indices += list(range(index, index + length))
-
         # print("self.col_spans_matrix:\n", self.col_spans_matrix)
+        # exit()
         # print("self.row_span_indices:", row_span_indices)
 
         # for not span cols, set it to row span value 2
@@ -477,6 +484,9 @@ class Table:
         span_indices, span_lengths = self.agnostic_span_indices(
             self.no_of_rows - 2, self.max_span_row_count)
 
+        # print("span_indices:", span_indices)
+        # print("span_lengths:", span_lengths)
+
         span_indices = [x + 2 for x in span_indices]
 
         for index, length in zip(span_indices, span_lengths):
@@ -495,23 +505,48 @@ class Table:
         # self.header_count['c'] += 1
         # print(self.header_count)
         # exit()
+    def make_span_two_row(self):
+        # print(self.cell_types)
+        # print(self.two_row_span_matrix)
+        if len(self.cell_types) > 4:
+            # print(len(self.cell_types))
+            idx_l = [i for i in range(2, len(self.cell_types), 2)]
+            # print(idx_l)
+            out_idx = random.sample(idx_l, int(len(idx_l) * 0.2))
+            # print(out_idx)
+            for idx in out_idx:
+                self.two_row_span_matrix[idx, 1:] = 2
+                self.two_row_span_matrix[idx + 1, 1:] = -1
+                # print(self.two_row_span_matrix)
 
     def generate_missing_cells(self):
         '''This is randomly select some cells to be empty (not containing any text)'''
         # print(self.get_log_value())
         missing = np.random.random(size=(self.get_log_value(), 2))
-        # print("missing:\n", missing)
-        # print("no_of_rows:", self.no_of_rows)
-        # print("self.no_of_cols:", self.no_of_cols)
-        # print("self.header_count:", self.header_count)
+        print("missing:\n", missing)
+        print("no_of_rows:", self.no_of_rows)
+        print("self.no_of_cols:", self.no_of_cols)
+        print("self.header_count:", self.header_count)
 
         missing[:, 0] = (self.no_of_rows - 1 - self.header_count['r']
                          ) * missing[:, 0] + self.header_count['r']
         missing[:, 1] = (self.no_of_rows - 1 - self.header_count['c']
                          ) * missing[:, 1] + self.header_count['c']
         # print(self.cell_types)
-        # print("missing:\n", missing)
+        print("missing:\n", missing)
 
+        for arr in missing:
+            self.missing_cells.append((int(arr[0]), int(arr[1])))
+        print(self.missing_cells)
+        # exit()
+
+    def generate_missing_cells2(self):
+        # print(self.no_of_rows, self.no_of_cols)
+        missing = np.random.random(size=(int(self.no_of_rows * self.no_of_cols * 0.1), 2))
+        # print(missing)
+        missing[:, 0] = (self.no_of_rows - 1) * missing[:, 0]
+        missing[:, 1] = (self.no_of_cols - 1) * missing[:, 1]
+        # print(missing)
         for arr in missing:
             self.missing_cells.append((int(arr[0]), int(arr[1])))
         # print(self.missing_cells)
@@ -579,6 +614,7 @@ class Table:
         # html += '<table style="width: 100%; table-layout:fixed;">'
         print("self.cell_types:\n", self.cell_types)
         print("self.row_spans_matrix:\n", self.row_spans_matrix)
+        print("self.two_row_span_matrix:\n", self.two_row_span_matrix)
         print("self.col_spans_matrix:\n", self.col_spans_matrix)
         print("self.headers:\n", self.headers)
         print("self.missing_cells:\n", self.missing_cells)
@@ -594,7 +630,9 @@ class Table:
                 text_type = self.cell_types[r, c].decode('utf-8')
                 # print('text_type:', text_type)  # c/e/n/t/m  ch/en/number/''/money
 
-                row_span_value = int(self.row_spans_matrix[r, c])
+                # row_span_value = int(self.row_spans_matrix[r, c])
+                row_span_value = int(self.two_row_span_matrix[r, c])
+
                 col_span_value = int(self.col_spans_matrix[r, c])
                 htmlcol = temparr[['s', 'h'].index(self.headers[r][c].decode(
                     'utf-8'))]  # th / td
@@ -677,27 +715,34 @@ class Table:
         # print(self.cell_types)
         # print(self.headers)
 
-        self.generate_missing_cells()  # generate missing cells
+        # self.generate_missing_cells()  # generate missing cells
+        self.generate_missing_cells2()
         # print("填充单元格为缺失", self.missing_cells)
 
         # print("边界类型：", self.border_type)
+        # print(self.cell_types)
         # print(self.row_spans_matrix)
         # print(self.col_spans_matrix)
 
         if self.border_type < 60:  # 绘制横线的情况下进行随机span
             # first row span
             if self.max_span_col_count > 0:
-                # self.make_first_row_spans()
+                # self.make_first_row_spans()  # 根据前两行进行跨列
                 pass
             # first col span
             if random.random() < 1 and self.max_span_row_count > 0:
-                # self.make_first_col_spans()
+                # self.make_first_col_spans()  # 根据第一列进行跨行
                 pass
+
+            # 根据填充缺失单元格索引、来进来跨行操作。
+            if self.max_span_col_count > 0:
+                self.make_span_two_row()  # 制作跨两行的明细行
         # print(self.cell_types)
         # print(self.headers)
         # print(self.row_spans_matrix)
         # print(self.col_spans_matrix)
         # print(self.missing_cells)
+        # exit()
 
         html, structure, idcounter = self.create_html(
         )  # create equivalent html

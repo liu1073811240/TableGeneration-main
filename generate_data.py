@@ -48,7 +48,7 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    print(args)
+    # print(args)
     t = GenerateTable(output=args.output,
                       ch_dict_path=args.ch_dict_path,
                       en_dict_path=args.en_dict_path,
